@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import { Box, Typography } from "@mui/material";
-
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
     title: "World Holidays and Events",
@@ -18,23 +13,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    marginTop="3rem"
-                    marginBottom="2rem"
-                    component="header"
-                >
-                    <Typography
-                        component="h1"
-                        variant="h2"
-                        style={{ userSelect: "none" }}
-                    >
+            <body className="bg-slate-50 px-12 py-8">
+                <header>
+                    <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl mt-8">
                         World Holidays and Events
-                    </Typography>
-                </Box>
+                    </h1>
+                </header>
                 {children}
             </body>
         </html>
