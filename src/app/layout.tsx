@@ -13,17 +13,17 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="bg-slate-50 px-12 py-8">
-                <header>
-                    <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl mt-2">
+            <body>
+                <header className="px-8 md:px-12 pt-10 pb-12">
+                    <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
                         World Holidays and Events
                     </h1>
-                    <p className="text-xl text-muted-foreground mt-2 mb-12">
+                    <p className="text-xl text-muted-foreground mt-2">
                         Explore holidays and events worldwide
                     </p>
                 </header>
-                {children}
-                <footer></footer>
+                <main className="px-8 md:px-12 pb-12">{children}</main>
+                <footer className="px-8 md:px-12 pb-12"></footer>
             </body>
         </html>
     );
