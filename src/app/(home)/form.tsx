@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { SelectWithInfo } from "@/components/ui/select-with-info";
 import { Button } from "@/components/ui/button";
+import { YearPicker } from "@/components/ui/year-picker";
 import {
     fetchCitiesList,
     fetchStatesAndCitiesList,
@@ -13,15 +14,17 @@ const additionalInfoTexts = {
         "Selecting a country displays holidays and events observed countrywide. If specific states or cities have unique holidays, they can be selected next.",
     state: "A state is listed only if it has holidays or events unique to the state or its cities.",
     city: "A city is listed only if it has unique holidays or events unique to the city.",
+    year: " Holidays and events for the current year are available for free. Logging into a profile is required to access information for other years.",
 };
 
 export const Form = ({ countries }: { countries: string[] }) => {
     const [states, setStates] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
 
-    const [selectedCountry, setSelectedCountry] = useState<string>("");
-    const [selectedCity, setSelectedCity] = useState<string>("");
-    const [selectedState, setSelectedState] = useState<string>("");
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedCity, setSelectedCity] = useState("none");
+    const [selectedState, setSelectedState] = useState("none");
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const [isStatesAndCityPending, startStatesAndCityTransition] =
         useTransition();
@@ -33,8 +36,8 @@ export const Form = ({ countries }: { countries: string[] }) => {
 
     const handleCountryChange = (country: string) => {
         setSelectedCountry(country);
-        setSelectedState("");
-        setSelectedCity("");
+        setSelectedState("none");
+        setSelectedCity("none");
 
         startStatesAndCityTransition(async () => {
             const { states, cities } = await fetchStatesAndCitiesList(country);
@@ -45,7 +48,7 @@ export const Form = ({ countries }: { countries: string[] }) => {
 
     const handleStateChange = (state: string) => {
         setSelectedState(state);
-        setSelectedCity("");
+        setSelectedCity("none");
 
         startCityTransition(async () => {
             const { cities } = await fetchCitiesList(selectedCountry, state);
@@ -87,7 +90,13 @@ export const Form = ({ countries }: { countries: string[] }) => {
                 onChange={setSelectedCity}
                 value={selectedCity}
             />
-
+            <YearPicker
+                label="Year"
+                additionalInfo={additionalInfoTexts.year}
+                id="year-picker"
+                value={selectedYear}
+                onChange={setSelectedYear}
+            />
             <Button className="mt-24">Explore</Button>
         </form>
     );

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { Spinner } from "@/components/ui/spinner";
 
 export type SelectWithInfoProps = {
     label: string;
@@ -41,7 +42,12 @@ export const SelectWithInfo = ({
     return (
         <div className="space-y-2">
             <div className="flex space-x-2">
-                <Label htmlFor={id}>
+                <Label
+                    htmlFor={id}
+                    className={
+                        disabled || loading ? "text-muted-foreground" : ""
+                    }
+                >
                     {label}
                     {optional ? " (Optional)" : ""}
                 </Label>
@@ -55,8 +61,8 @@ export const SelectWithInfo = ({
 
                     <PopoverContent
                         className="bg-slate-200 max-w-full"
-                        side="right"
-                        align="start"
+                        side="bottom"
+                        align="center"
                     >
                         <p className="leading-7">{additionalInfo}</p>
                         <PopoverClose asChild>
@@ -67,21 +73,31 @@ export const SelectWithInfo = ({
                     </PopoverContent>
                 </Popover>
             </div>
-
-            <Select onValueChange={onChange} value={value} disabled={disabled}>
-                <SelectTrigger id={id}>
-                    <SelectValue placeholder={label} />
-                </SelectTrigger>
-                <SelectContent>
-                    {options.map((option) => (
-                        <SelectItem key={option} value={option}>
-                            {option}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-
-            {loading ? "Loading..." : null}
+            <div className="flex space-x-3 items-center">
+                <Select
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                >
+                    <SelectTrigger
+                        id={id}
+                        className={disabled ? "bg-muted" : ""}
+                    >
+                        <SelectValue placeholder={label} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {optional ? (
+                            <SelectItem value="none">-</SelectItem>
+                        ) : null}
+                        {options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                                {option}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                {loading ? <Spinner /> : null}
+            </div>
         </div>
     );
 };
