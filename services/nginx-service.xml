@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Using winsw -->
+<service>
+  <id>nginx-service</id>
+  <name>Nginx Service</name>
+  <description>Runs Nginx as a Windows service</description>
+  <workingdirectory>C:\nginx</workingdirectory>
+  <executable>C:\nginx\nginx.exe</executable>
+  <logpath>C:\nginx\logs</logpath>
+  <log mode="roll">
+    <file>nginx-service.log</file>
+  </log>
+  <priority>Normal</priority>
+  <stoptimeout>15</stoptimeout>
+  <stopexecutable>c:\nginx\nginx.exe</stopexecutable>
+  <stoparguments>-s stop</stoparguments>
+  <startmode>Automatic</startmode>
+</service>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+  <id>nextjs-service</id>
+  <name>Next.js Service</name>
+  <description>Runs Next.js application as a Windows service</description>
+  <workingdirectory>C:\holiday-dates</workingdirectory>
+  <executable>C:\Program Files\nodejs\npm.cmd</executable>
+  <arguments>run start</arguments>
+  <logpath>C:\holiday-dates\logs</logpath>
+  <log mode="roll">
+    <file>nextjs-service.log</file>
+  </log>
+  <priority>Normal</priority>
+  <stoptimeout>15</stoptimeout>
+  <stopexecutable>taskkill</stopexecutable>
+  <stoparguments>/IM node.exe /F</stoparguments>
+  <startmode>Automatic</startmode>
+</service>
