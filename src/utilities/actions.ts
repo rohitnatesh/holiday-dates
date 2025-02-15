@@ -96,3 +96,5 @@ export const fetchCitiesList = async (country: string, state: string) => {
         );
     }
 };
+
+export const fetchHolidayList = async () => {};

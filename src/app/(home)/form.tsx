@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { MouseEventHandler, useState, useTransition } from "react";
 import { SelectWithInfo } from "@/components/ui/select-with-info";
 import { Button } from "@/components/ui/button";
 import { YearPicker } from "@/components/ui/year-picker";
-import {
-    fetchCitiesList,
-    fetchStatesAndCitiesList,
-} from "@/utilities/fetchData";
+import { fetchCitiesList, fetchStatesAndCitiesList } from "@/utilities/actions";
+import { useRouter } from "next/navigation";
+import { getUrlWithQueryParam } from "@/utilities/getUrlWithQueryParam";
 
 const additionalInfoTexts = {
     country:
@@ -29,6 +28,8 @@ export const Form = ({ countries }: { countries: string[] }) => {
     const [isStatesAndCityPending, startStatesAndCityTransition] =
         useTransition();
     const [isCityPending, startCityTransition] = useTransition();
+
+    const router = useRouter();
 
     const isStatesDisabled = states.length === 0 || isStatesAndCityPending;
     const isCitiesDisabled =
@@ -56,6 +57,19 @@ export const Form = ({ countries }: { countries: string[] }) => {
         });
     };
 
+    const handleExplore: MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+
+        const calendarUrl = getUrlWithQueryParam("/calendar", {
+            country: selectedCountry,
+            city: selectedCity,
+            state: selectedState,
+            year: selectedYear,
+        });
+
+        router.push(calendarUrl);
+    };
+
     return (
         <form className="sm:w-2/4 md:w-2/4 lg:w-1/4 space-y-6">
             <SelectWithInfo
@@ -65,6 +79,7 @@ export const Form = ({ countries }: { countries: string[] }) => {
                 additionalInfo={additionalInfoTexts.country}
                 onChange={handleCountryChange}
                 value={selectedCountry}
+                disabled={isStatesAndCityPending}
             />
 
             <SelectWithInfo
@@ -97,7 +112,13 @@ export const Form = ({ countries }: { countries: string[] }) => {
                 value={selectedYear}
                 onChange={setSelectedYear}
             />
-            <Button className="mt-24">Explore</Button>
+            <Button
+                disabled={!selectedCountry}
+                onClick={handleExplore}
+                className="!mt-10"
+            >
+                Explore
+            </Button>
         </form>
     );
 };
