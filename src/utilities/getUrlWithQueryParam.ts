@@ -9,10 +9,12 @@ export const getUrlWithQueryParam = (
 
     Object.entries(params).forEach(([key, value]) => {
         if (value === undefined || value === null || value === "none") return;
-        queryParams.push(`${key}=${value}`);
+        queryParams.push(
+            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+        );
     });
 
     if (!queryParams.length) return url;
 
-    return `${url}?${encodeURI(queryParams.join(separator))}`;
+    return `${url}?${queryParams.join(separator)}`;
 };

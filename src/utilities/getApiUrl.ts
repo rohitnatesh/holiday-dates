@@ -8,7 +8,7 @@ export const getApiUrl = (
 
     if (substitutes) {
         Object.entries(substitutes).forEach(([key, value]) => {
-            path = path!.replace(`{${key}}`, value);
+            path = path!.replace(`{${key}}`, encodeURIComponent(value));
         });
     }
 
