@@ -4,6 +4,9 @@ import { getApiUrl } from "@/utilities/getApiUrl";
 import { ListResponse } from "@/types/ListResponse";
 import mockCountriesList from "@/mocks/countries.json";
 import mockStatesList from "@/mocks/countryStates.json";
+import holidaysList from "@/mocks/holidaysAndEvents.json";
+import { Holiday } from "@/types/Holiday";
+import { HolidaysResponse } from "@/types/HolidaysResponse";
 
 export const fetchCountriesList = async () => {
     if (process.env.NODE_ENV === "production") {
@@ -97,4 +100,44 @@ export const fetchCitiesList = async (country: string, state: string) => {
     }
 };
 
-export const fetchHolidayList = async () => {};
+export const fetchHolidayList = async (
+    country: string,
+    year: string,
+    state?: string,
+    city?: string
+) => {
+    if (process.env.NODE_ENV === "production") {
+        try {
+            const holidayListApi = getApiUrl("HOLIDAY_LIST", {
+                country,
+                state: state || "none",
+                city: city || "none",
+                startYear: year,
+                startMonth: "1",
+                startDay: "1",
+                endYear: year,
+                endMonth: "12",
+                endDay: "31",
+            });
+
+            const holidaysResponse = await fetch(holidayListApi);
+            const holidaysList: HolidaysResponse =
+                await holidaysResponse.json();
+
+            return { holidays: holidaysList.theList };
+        } catch (error) {
+            console.error(error);
+            return {
+                holidays: [],
+                error: true,
+            };
+        }
+    } else {
+        return new Promise<{ holidays: Holiday[] }>((resolve) =>
+            setTimeout(
+                () => resolve({ holidays: holidaysList.theList as Holiday[] }),
+                1000
+            )
+        );
+    }
+};

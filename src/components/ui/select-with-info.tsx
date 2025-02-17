@@ -56,7 +56,10 @@ export const SelectWithInfo = ({
                     <PopoverTrigger
                         aria-label={`More information about the ${label} field`}
                     >
-                        <CircleHelp role="presentation" className="h-4 w-4" />
+                        <CircleHelp
+                            role="presentation"
+                            className="h-4 w-4 fill-lime-100"
+                        />
                     </PopoverTrigger>
 
                     <PopoverContent

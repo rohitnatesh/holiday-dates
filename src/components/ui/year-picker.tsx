@@ -47,6 +47,15 @@ export const YearPicker = ({
     const previousDecade = () => setDecade((previous) => previous - 10);
     const nextDecade = () => setDecade((previous) => previous + 10);
 
+    const handleOpenChange = (newOpen: boolean) => {
+        // If the picker is opening, land on the current decade page.
+        if (newOpen) {
+            setDecade(getDecadeStart(value));
+        }
+
+        setOpen(newOpen);
+    };
+
     return (
         <div className="space-y-2">
             <div className="flex space-x-2">
@@ -61,7 +70,10 @@ export const YearPicker = ({
                     <PopoverTrigger
                         aria-label={`More information about ${label} field`}
                     >
-                        <CircleHelp role="presentation" className="h-4 w-4" />
+                        <CircleHelp
+                            role="presentation"
+                            className="h-4 w-4 fill-lime-100"
+                        />
                     </PopoverTrigger>
 
                     <PopoverContent
@@ -78,7 +90,7 @@ export const YearPicker = ({
                     </PopoverContent>
                 </Popover>
             </div>
-            <Popover open={open} onOpenChange={setOpen}>
+            <Popover open={open} onOpenChange={handleOpenChange}>
                 <PopoverTrigger asChild>
                     <Button
                         disabled={disabled}
@@ -88,7 +100,7 @@ export const YearPicker = ({
                             !value && "text-muted-foreground"
                         )}
                     >
-                        <CalendarIcon />
+                        <CalendarIcon className="fill-slate-200" />
                         {value ? value : <span>{label}</span>}
                     </Button>
                 </PopoverTrigger>

@@ -1,3 +1,3 @@
 export interface ListResponse {
-    theList: Array<string>
+    theList: Array<string>;
 }
