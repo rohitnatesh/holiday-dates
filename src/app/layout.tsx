@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,9 +13,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            {process.env.NODE_ENV === "production" && (
-                <GoogleTagManager gtmId={process.env.GTM_ID || ""} />
-            )}
             <body>
                 <header className="px-8 md:px-12 pt-10 pb-8">
                     <h1 className="scroll-m-20 text-2xl sm:text-3xl font-bold tracking-tight lg:text-5xl">
