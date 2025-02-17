@@ -38,7 +38,12 @@ const generateStateSitemap = async (
     const { cities } = await fetchCitiesList(country, state);
 
     const cityEntries = cities.map((city) =>
-        getCalendarSitemapEntry(lastModified, { country, state, city, year })
+        getCalendarSitemapEntry(lastModified, {
+            country,
+            state,
+            city: city.replace("&", "&amp;"),
+            year,
+        })
     );
 
     return [stateEntry, ...cityEntries];
@@ -61,12 +66,21 @@ const generateCountrySitemap = async (
     // Generate sitemaps for states in parallel.
     const stateSitemaps = await Promise.all(
         states.map((state) =>
-            generateStateSitemap(country, state, lastModified, year)
+            generateStateSitemap(
+                country,
+                state.replace("&", "&amp;"),
+                lastModified,
+                year
+            )
         )
     );
 
     const countryCityEntries = countryCities.map((city) =>
-        getCalendarSitemapEntry(lastModified, { country, city, year })
+        getCalendarSitemapEntry(lastModified, {
+            country,
+            city: city.replace("&", "&amp;"),
+            year,
+        })
     );
 
     return [countryEntry, ...stateSitemaps.flat(), ...countryCityEntries];
@@ -81,7 +95,11 @@ const generateSitemap = async (): Promise<MetadataRoute.Sitemap> => {
     // Generate sitemaps for countries in parallel.
     const countrySitemaps = await Promise.all(
         countries.map((country) =>
-            generateCountrySitemap(country, lastModified, year)
+            generateCountrySitemap(
+                country.replace("&", "&amp;"),
+                lastModified,
+                year
+            )
         )
     );
 
