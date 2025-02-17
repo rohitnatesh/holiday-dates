@@ -84,7 +84,7 @@ export const TableRowWithDetails = ({ row }: { row: Holiday }) => {
                 className={open ? "visible" : "collapse"}
             >
                 <TableCell colSpan={3} className="bg-slate-50">
-                    <div className="pl-16 pr-8 sm:pl-20 sm:pr-20">
+                    <div className="pl-14 pr-8 sm:pl-20 sm:pr-20">
                         <dl className="text-sm">
                             <Data
                                 heading="Businesses Closed"
@@ -104,7 +104,10 @@ export const TableRowWithDetails = ({ row }: { row: Holiday }) => {
                                 value={row.dis}
                             />
                             {row.holidayNote ? (
-                                <Data heading="Note" value={row.holidayNote} />
+                                <Data
+                                    heading="Note"
+                                    value={row.holidayNote.replaceAll("\\", "")}
+                                />
                             ) : null}
                         </dl>
                     </div>
