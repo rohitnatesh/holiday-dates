@@ -1,6 +1,7 @@
 export const getUrlWithQueryParam = (
     url: string,
-    params?: { [key: string]: string | number | undefined }
+    params?: { [key: string]: string | number | undefined },
+    separator: string = "&"
 ) => {
     if (!params) return url;
 
@@ -13,5 +14,5 @@ export const getUrlWithQueryParam = (
 
     if (!queryParams.length) return url;
 
-    return `${url}?${encodeURI(queryParams.join("&"))}`;
+    return `${url}?${encodeURI(queryParams.join(separator))}`;
 };

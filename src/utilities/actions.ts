@@ -1,12 +1,12 @@
 "use server";
 
 import { getApiUrl } from "@/utilities/getApiUrl";
-import { ListResponse } from "@/types/ListResponse";
 import mockCountriesList from "@/mocks/countries.json";
 import mockStatesList from "@/mocks/countryStates.json";
 import holidaysList from "@/mocks/holidaysAndEvents.json";
-import { Holiday } from "@/types/Holiday";
-import { HolidaysResponse } from "@/types/HolidaysResponse";
+import type { ListResponse } from "@/types/ListResponse";
+import type { Holiday } from "@/types/Holiday";
+import type { HolidaysResponse } from "@/types/HolidaysResponse";
 
 export const fetchCountriesList = async () => {
     if (process.env.NODE_ENV === "production") {

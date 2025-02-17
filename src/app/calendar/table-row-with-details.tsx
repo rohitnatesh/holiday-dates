@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, CircleCheck, CircleX } from "lucide-react";
-import { Holiday } from "@/types/Holiday";
+import type { Holiday } from "@/types/Holiday";
 
 const getDataValue = (value?: string) => {
     if (!value) return "–";

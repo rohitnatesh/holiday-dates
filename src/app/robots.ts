@@ -6,7 +6,7 @@ const robots = (): MetadataRoute.Robots => {
             userAgent: "*",
             allow: "/",
         },
-        sitemap: "https://www.worldholidaysandevents.com/sitemap.xml",
+        sitemap: `${process.env.WEBSITE_URL}sitemap.xml`,
     };
 };
 

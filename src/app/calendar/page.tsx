@@ -31,9 +31,9 @@ const Page = async ({
                 id="holidays-heading"
                 className="text-lg sm:text-2xl font-semibold tracking-tight mt-4 mb-8 text-center"
             >
-                Holidays and Events in {city ? `${city}, ` : null}
+                {year} Holidays and Events in {city ? `${city}, ` : null}
                 {state ? `${state}, ` : null}
-                {country} in {year}
+                {country}
             </h2>
 
             <Table aria-describedby="holidays-heading">
