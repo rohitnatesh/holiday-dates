@@ -62,8 +62,8 @@ export const Form = ({ countries }: { countries: string[] }) => {
 
         const calendarUrl = getUrlWithQueryParam("/calendar", {
             country: selectedCountry,
-            city: selectedCity,
             state: selectedState,
+            city: selectedCity,
             year: selectedYear,
         });
 
