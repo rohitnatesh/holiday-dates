@@ -1,4 +1,4 @@
-import { Form } from "@/app/(home)/form";
+import { Form } from "./form";
 import { fetchCountriesList } from "@/utilities/actions";
 
 const Page = async () => {

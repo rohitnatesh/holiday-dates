@@ -3,13 +3,16 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: "World Holidays and Events",
-    description: "",
+    description:
+        "Explore holidays and events worldwide for any year! Simply select a location and year to start exploring.",
 };
 
 export default function RootLayout({
-    children,
+    form,
+    footer,
 }: Readonly<{
-    children: React.ReactNode;
+    form: React.ReactNode;
+    footer: React.ReactNode;
 }>) {
     return (
         <html lang="en">
@@ -22,8 +25,8 @@ export default function RootLayout({
                         Explore holidays and events worldwide
                     </p>
                 </header>
-                <main className="px-8 md:px-12 pb-12">{children}</main>
-                <footer className="px-8 md:px-12 pb-12"></footer>
+                <main className="px-8 md:px-12 pb-12">{form}</main>
+                {footer}
             </body>
         </html>
     );

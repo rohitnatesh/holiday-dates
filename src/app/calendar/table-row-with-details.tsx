@@ -9,6 +9,10 @@ import type { Holiday } from "@/types/Holiday";
 const getDataValue = (value?: string) => {
     if (!value) return "–";
 
+    if (value === "unk") {
+        return "Unknown";
+    }
+
     if (value === "Yes" || value === "yes") {
         return (
             <span title="Yes">
