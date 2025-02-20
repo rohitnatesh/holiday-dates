@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Footer } from "@/app/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,11 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-    form,
-    footer,
+    children,
 }: Readonly<{
-    form: React.ReactNode;
-    footer: React.ReactNode;
+    children: React.ReactNode;
 }>) {
     return (
         <html lang="en">
@@ -25,8 +24,8 @@ export default function RootLayout({
                         Explore holidays and events worldwide
                     </p>
                 </header>
-                <main className="px-8 md:px-12 pb-12">{form}</main>
-                {footer}
+                <main className="px-8 md:px-12 pb-12">{children}</main>
+                <Footer />
             </body>
         </html>
     );

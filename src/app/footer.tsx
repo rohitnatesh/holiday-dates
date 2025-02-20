@@ -86,7 +86,7 @@ const FooterModal = ({
     );
 };
 
-const Footer = () => {
+export const Footer = () => {
     const [modal, setModal] = useState<ModalsType | null>(null);
 
     const handleClick = (modalType: ModalsType) => {
@@ -126,5 +126,3 @@ const Footer = () => {
         </>
     );
 };
-
-export default Footer;
