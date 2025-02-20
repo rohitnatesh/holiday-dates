@@ -77,7 +77,7 @@ const FooterModal = ({
                 </DialogHeader>
                 <section>{content}</section>
                 <DialogFooter>
-                    <Button asChild variant="link">
+                    <Button asChild variant="secondary">
                         <DialogClose>Okay</DialogClose>
                     </Button>
                 </DialogFooter>
