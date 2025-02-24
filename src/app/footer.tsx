@@ -75,7 +75,7 @@ const FooterModal = ({
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
-                <section>{content}</section>
+                <section className="leading-7">{content}</section>
                 <DialogFooter>
                     <Button asChild variant="secondary">
                         <DialogClose>Okay</DialogClose>
