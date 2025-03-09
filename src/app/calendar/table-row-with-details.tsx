@@ -52,7 +52,13 @@ const Data = ({ heading, value }: { heading: string; value?: string }) => {
     );
 };
 
-export const TableRowWithDetails = ({ row }: { row: Holiday }) => {
+export const TableRowWithDetails = ({
+    row,
+    disableDetails,
+}: {
+    row: Holiday;
+    disableDetails?: boolean;
+}) => {
     const [open, setOpen] = useState(false);
     const id = useId();
 
@@ -63,6 +69,7 @@ export const TableRowWithDetails = ({ row }: { row: Holiday }) => {
             <TableRow>
                 <TableCell className="w-14">
                     <Button
+                        disabled={disableDetails}
                         title="Additional Information"
                         variant="ghost"
                         size="icon"
@@ -82,41 +89,46 @@ export const TableRowWithDetails = ({ row }: { row: Holiday }) => {
                 </TableCell>
             </TableRow>
 
-            <TableRow
-                id={id}
-                aria-hidden={!open}
-                className={open ? "visible" : "collapse"}
-            >
-                <TableCell colSpan={3} className="bg-slate-50">
-                    <div className="pl-14 pr-8 sm:pl-20 sm:pr-20">
-                        <dl className="text-sm">
-                            <Data
-                                heading="Businesses Closed"
-                                value={row.businessesClosed}
-                            />
-                            <Data
-                                heading="Banks Closed"
-                                value={row.banksClosed}
-                            />
-                            <Data
-                                heading="Religious Holiday"
-                                value={row.religiousHoliday}
-                            />
-                            <Data heading="Religion" value={row.religion} />
-                            <Data
-                                heading="Disrespectful to Hold an Event"
-                                value={row.dis}
-                            />
-                            {row.holidayNote ? (
+            {!disableDetails && (
+                <TableRow
+                    id={id}
+                    aria-hidden={!open}
+                    className={open ? "visible" : "collapse"}
+                >
+                    <TableCell colSpan={3} className="bg-slate-50">
+                        <div className="pl-14 pr-8 sm:pl-20 sm:pr-20">
+                            <dl className="text-sm">
                                 <Data
-                                    heading="Note"
-                                    value={row.holidayNote.replaceAll("\\", "")}
+                                    heading="Businesses Closed"
+                                    value={row.businessesClosed}
                                 />
-                            ) : null}
-                        </dl>
-                    </div>
-                </TableCell>
-            </TableRow>
+                                <Data
+                                    heading="Banks Closed"
+                                    value={row.banksClosed}
+                                />
+                                <Data
+                                    heading="Religious Holiday"
+                                    value={row.religiousHoliday}
+                                />
+                                <Data heading="Religion" value={row.religion} />
+                                <Data
+                                    heading="Disrespectful to Hold an Event"
+                                    value={row.dis}
+                                />
+                                {row.holidayNote ? (
+                                    <Data
+                                        heading="Note"
+                                        value={row.holidayNote.replaceAll(
+                                            "\\",
+                                            ""
+                                        )}
+                                    />
+                                ) : null}
+                            </dl>
+                        </div>
+                    </TableCell>
+                </TableRow>
+            )}
         </>
     );
 };

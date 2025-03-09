@@ -1,16 +1,9 @@
 "use server";
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { fetchHolidayList } from "@/utilities/actions";
-import { AlertTriangle } from "lucide-react";
-import { TableRowWithDetails } from "./table-row-with-details";
+import { UserDetails } from "@/types/UserDetails";
+import { getUserDetails } from "@/utilities/actions/auth";
+import { TableWithData } from "./table-with-data";
+import { TableBlurred } from "./table-blurred";
 
 const Page = async ({
     searchParams,
@@ -23,7 +16,13 @@ const Page = async ({
         throw new Error();
     }
 
-    const { holidays } = await fetchHolidayList(country, year, state, city);
+    const isDataFree = Number(year) <= new Date().getFullYear();
+    let user: UserDetails | null = null;
+
+    // If data is not free, only then we want to verify the user details.
+    if (!isDataFree) {
+        user = await getUserDetails();
+    }
 
     return (
         <section className="sm:ml-4 sm:max-w-[800px]">
@@ -36,40 +35,16 @@ const Page = async ({
                 {country}
             </h2>
 
-            <Table aria-describedby="holidays-heading">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>
-                            <span className="sr-only">
-                                Additional Information
-                            </span>
-                        </TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Name</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {holidays.length === 0 ? (
-                        <TableRow>
-                            <TableCell
-                                colSpan={3}
-                                className="border-b font-medium text-slate-600 text-md text-center px-2 py-8 sm:py-20"
-                            >
-                                <AlertTriangle className="inline-block mr-2 fill-yellow-200" />
-                                No holidays or events found for the selected
-                                location and year.
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        holidays.map((row) => (
-                            <TableRowWithDetails
-                                key={`${row.startDate}-${row.name}`}
-                                row={row}
-                            />
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+            {isDataFree || user ? (
+                <TableWithData
+                    country={country}
+                    state={state}
+                    city={city}
+                    year={year}
+                />
+            ) : (
+                <TableBlurred user={user} />
+            )}
         </section>
     );
 };
