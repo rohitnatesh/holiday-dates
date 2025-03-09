@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Footer } from "@/app/footer";
+import { Footer } from "@/components/footer";
+import { AccountDropdown } from "@/components/account-dropdown";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,8 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <header className="px-8 md:px-12 pt-10 pb-8">
+                <header className="px-8 md:px-12 pt-6 md:pt-10 pb-8 max-w-screen-lg lg:mx-auto">
+                    <AccountDropdown />
                     <h1 className="scroll-m-20 text-2xl sm:text-3xl font-bold tracking-tight lg:text-5xl">
                         World Holidays and Events
                     </h1>
@@ -24,7 +26,9 @@ export default function RootLayout({
                         Explore holidays and events worldwide
                     </p>
                 </header>
-                <main className="px-8 md:px-12 pb-12">{children}</main>
+                <main className="px-8 md:px-12 pb-12 max-w-screen-lg lg:mx-auto">
+                    {children}
+                </main>
                 <Footer />
             </body>
         </html>

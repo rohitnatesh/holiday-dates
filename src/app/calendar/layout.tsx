@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
             {children}
 
-            <Button asChild className="mt-14" variant="default">
+            <Button asChild className="mt-14">
                 <Link href="/">Explore Another</Link>
             </Button>
         </>

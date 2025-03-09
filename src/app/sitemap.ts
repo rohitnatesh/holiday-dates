@@ -3,7 +3,7 @@ import {
     fetchCitiesList,
     fetchCountriesList,
     fetchStatesAndCitiesList,
-} from "@/utilities/actions";
+} from "@/utilities/actions/data";
 import { getUrlWithQueryParam } from "@/utilities/getUrlWithQueryParam";
 
 // Revalidate every week.

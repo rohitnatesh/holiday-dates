@@ -93,6 +93,7 @@ export const YearPicker = ({
             <Popover open={open} onOpenChange={handleOpenChange}>
                 <PopoverTrigger asChild>
                     <Button
+                        id={id}
                         disabled={disabled}
                         variant="outline"
                         className={cn(

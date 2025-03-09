@@ -99,7 +99,7 @@ export const Footer = () => {
 
     return (
         <>
-            <footer className="px-8 md:px-12 pb-8 mt-8 max-w-full bottom-full">
+            <footer className="px-8 md:px-12 pb-8 mt-8 max-w-full bottom-full max-w-screen-lg lg:mx-auto">
                 <ul className="flex flex-wrap">
                     {footerOrder.map((modalType) => (
                         <li

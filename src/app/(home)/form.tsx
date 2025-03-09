@@ -4,7 +4,10 @@ import { MouseEventHandler, useState, useTransition } from "react";
 import { SelectWithInfo } from "@/components/ui/select-with-info";
 import { Button } from "@/components/ui/button";
 import { YearPicker } from "@/components/ui/year-picker";
-import { fetchCitiesList, fetchStatesAndCitiesList } from "@/utilities/actions";
+import {
+    fetchCitiesList,
+    fetchStatesAndCitiesList,
+} from "@/utilities/actions/data";
 import { useRouter } from "next/navigation";
 import { getUrlWithQueryParam } from "@/utilities/getUrlWithQueryParam";
 

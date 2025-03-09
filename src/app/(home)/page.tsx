@@ -1,5 +1,5 @@
 import { Form } from "./form";
-import { fetchCountriesList } from "@/utilities/actions";
+import { fetchCountriesList } from "@/utilities/actions/data";
 
 const Page = async () => {
     const { countries } = await fetchCountriesList();
