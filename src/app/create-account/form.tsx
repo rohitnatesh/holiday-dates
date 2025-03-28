@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { login } from "@/utilities/actions/auth";
 import Link from "next/link";
 
-export const LoginForm = ({}) => {
+export const CreateAccountForm = ({}) => {
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState(false);
 
@@ -42,9 +42,9 @@ export const LoginForm = ({}) => {
         <div className="flex sm:ml-4 mt-4">
             <Card className="max-w-96 w-full">
                 <CardHeader>
-                    <CardTitle className="text-2xl">Login</CardTitle>
+                    <CardTitle className="text-2xl">Create Account</CardTitle>
                     <CardDescription>
-                        Enter your email below to login to your account
+                        Enter your email and password to create your account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -67,19 +67,24 @@ export const LoginForm = ({}) => {
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    <a
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </a>
-                                </div>
+                                <Label htmlFor="password">Password</Label>
                                 <Input
                                     id="password"
                                     type="password"
                                     name="password"
+                                    autoComplete="new-password"
+                                    required
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">
+                                    Confirm Password
+                                </Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    autoComplete="new-password"
                                     required
                                 />
                             </div>
@@ -88,16 +93,16 @@ export const LoginForm = ({}) => {
                                 className="w-full"
                                 disabled={isPending}
                             >
-                                Login
+                                Create Account
                             </Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
-                            Don&apos;t have an account?{" "}
+                            Already have an account?{" "}
                             <Link
-                                href="/create-account"
+                                href="/login"
                                 className="underline underline-offset-4"
                             >
-                                Create Account
+                                Login
                             </Link>
                         </div>
                     </form>

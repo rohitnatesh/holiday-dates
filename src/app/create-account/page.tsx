@@ -1,10 +1,10 @@
-import { LoginForm } from "./form";
+import { CreateAccountForm } from "./form";
 import PageBaseWithNav from "@/components/page-base-with-nav";
 
-export default function LoginPage() {
+export default function CreateAccountPage() {
     return (
         <PageBaseWithNav>
-            <LoginForm />
+            <CreateAccountForm />
         </PageBaseWithNav>
     );
 }

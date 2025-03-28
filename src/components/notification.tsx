@@ -34,10 +34,12 @@ export const Notification = () => {
 
     return (
         <Toaster
-            duration={6000}
-            position="bottom-center"
+            duration={8000}
+            position="bottom-right"
+            offset={{ bottom: 80, right: 100 }}
             visibleToasts={1}
             richColors
+            closeButton
         />
     );
 };

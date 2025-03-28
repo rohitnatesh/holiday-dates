@@ -47,7 +47,7 @@ export const login = async (
     if (error) return { error: true, success: false };
 
     revalidatePath("/", "layout");
-    redirect(redirectPath);
+    redirect(`${redirectPath}?notification=logged_in`);
 };
 
 export const signup = async (formData: FormData) => {
@@ -73,5 +73,5 @@ export const logout = async () => {
     await supabase.auth.signOut();
 
     revalidatePath("/", "layout");
-    redirect("/");
+    redirect("/?notification=logged_out");
 };
