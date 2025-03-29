@@ -9,6 +9,24 @@ import { getUrlWithQueryParam } from "@/utilities/getUrlWithQueryParam";
 // Revalidate every week.
 export const revalidate = 604800;
 
+// Generate an array of years (past 10 and future 10)
+const generateYearsList = (): number[] => {
+    const currentYear = new Date().getFullYear();
+    const years: number[] = [];
+
+    // Last 10 years (including current year)
+    for (let year = currentYear - 9; year <= currentYear; year++) {
+        years.push(year);
+    }
+
+    // Next 10 years
+    for (let year = currentYear + 1; year <= currentYear + 10; year++) {
+        years.push(year);
+    }
+
+    return years;
+};
+
 const getCalendarSitemapEntry = (
     lastModified: Date,
     params: { [key: string]: string | number }
@@ -23,95 +41,118 @@ const getCalendarSitemapEntry = (
     priority: 1,
 });
 
-const generateStateSitemap = async (
+const generateStateSitemapForYears = async (
     country: string,
     state: string,
     lastModified: Date,
-    year: number
+    years: number[]
 ): Promise<MetadataRoute.Sitemap> => {
-    const stateEntry = getCalendarSitemapEntry(lastModified, {
-        country,
-        state,
-        year,
+    // Fetch cities once for all years
+    const { cities } = await fetchCitiesList(country, state);
+    const entries: MetadataRoute.Sitemap = [];
+
+    // Generate entries for each year
+    years.forEach((year) => {
+        // Add state entry for this year
+        entries.push(
+            getCalendarSitemapEntry(lastModified, {
+                country,
+                state,
+                year,
+            })
+        );
+
+        // Add city entries for this year
+        cities.forEach((city) => {
+            entries.push(
+                getCalendarSitemapEntry(lastModified, {
+                    country,
+                    state,
+                    city: city.replace("&", "&amp;"),
+                    year,
+                })
+            );
+        });
     });
 
-    const { cities } = await fetchCitiesList(country, state);
-
-    const cityEntries = cities.map((city) =>
-        getCalendarSitemapEntry(lastModified, {
-            country,
-            state,
-            city: city.replace("&", "&amp;"),
-            year,
-        })
-    );
-
-    return [stateEntry, ...cityEntries];
+    return entries;
 };
 
-const generateCountrySitemap = async (
+const generateCountrySitemapForYears = async (
     country: string,
     lastModified: Date,
-    year: number
+    years: number[]
 ): Promise<MetadataRoute.Sitemap> => {
-    const countryEntry = getCalendarSitemapEntry(lastModified, {
-        country,
-        year,
-    });
-
+    // Fetch states and cities once for all years
     const { states, cities: countryCities } = await fetchStatesAndCitiesList(
         country
     );
+    const entries: MetadataRoute.Sitemap = [];
 
-    // Generate sitemaps for states in parallel.
+    // Generate entries for each year
+    years.forEach((year) => {
+        // Add country entry for this year
+        entries.push(
+            getCalendarSitemapEntry(lastModified, {
+                country,
+                year,
+            })
+        );
+
+        // Add country-city entries for this year
+        countryCities.forEach((city) => {
+            entries.push(
+                getCalendarSitemapEntry(lastModified, {
+                    country,
+                    city: city.replace("&", "&amp;"),
+                    year,
+                })
+            );
+        });
+    });
+
+    // Generate state sitemaps in parallel
     const stateSitemaps = await Promise.all(
         states.map((state) =>
-            generateStateSitemap(
+            generateStateSitemapForYears(
                 country,
                 state.replace("&", "&amp;"),
                 lastModified,
-                year
+                years
             )
         )
     );
 
-    const countryCityEntries = countryCities.map((city) =>
-        getCalendarSitemapEntry(lastModified, {
-            country,
-            city: city.replace("&", "&amp;"),
-            year,
-        })
-    );
-
-    return [countryEntry, ...stateSitemaps.flat(), ...countryCityEntries];
+    return [...entries, ...stateSitemaps.flat()];
 };
 
 const generateSitemap = async (): Promise<MetadataRoute.Sitemap> => {
     const lastModified = new Date();
-    const year = lastModified.getFullYear();
+    const years = generateYearsList();
 
+    // Fetch countries once for all years
     const { countries } = await fetchCountriesList();
 
-    // Generate sitemaps for countries in parallel.
+    // Generate home page entry
+    const homepageEntry = {
+        url: process.env.WEBSITE_URL!,
+        lastModified,
+        changeFrequency: "yearly" as const,
+        priority: 1,
+    };
+
+    // Generate sitemaps for countries in parallel
     const countrySitemaps = await Promise.all(
         countries.map((country) =>
-            generateCountrySitemap(
+            generateCountrySitemapForYears(
                 country.replace("&", "&amp;"),
                 lastModified,
-                year
+                years
             )
         )
     );
 
-    return [
-        {
-            url: process.env.WEBSITE_URL!,
-            lastModified,
-            changeFrequency: "yearly",
-            priority: 1,
-        },
-        ...countrySitemaps.flat(),
-    ];
+    return [homepageEntry, ...countrySitemaps.flat()];
 };
 
 export default generateSitemap;
