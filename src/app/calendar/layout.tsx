@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     return (
         <PageBaseWithNav>
             {children}
-            <Button asChild className="mt-14">
+            <Button asChild className="mt-8">
                 <Link href="/">Explore Another</Link>
             </Button>
         </PageBaseWithNav>

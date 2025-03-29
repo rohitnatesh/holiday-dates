@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { AccountDropdown } from "@/components/account-dropdown";
 import { Notification } from "@/components/notification";
 import "./globals.css";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "World Holidays and Events",
@@ -22,7 +23,7 @@ export default function RootLayout({
                 <header className="px-8 md:px-12 pt-6 md:pt-10 pb-8 max-w-screen-lg lg:mx-auto">
                     <AccountDropdown />
                     <h1 className="scroll-m-20 text-2xl sm:text-3xl font-bold tracking-tight lg:text-5xl">
-                        World Holidays and Events
+                        <Link href="/">World Holidays and Events</Link>
                     </h1>
                     <p className="text-md sm:text-xl text-muted-foreground mt-2">
                         Explore holidays and events worldwide

@@ -5,6 +5,37 @@ import { getUserDetails } from "@/utilities/actions/auth";
 import { TableWithData } from "./table-with-data";
 import { TableBlurred } from "./table-blurred";
 import { AdjacentYearLinks } from "./adjacent-year-links";
+import { Metadata, ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+    {
+        searchParams,
+    }: {
+        searchParams: Promise<{ [key: string]: string | undefined }>;
+    },
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { country, state, city, year } = await searchParams;
+
+    if (!country || !year) {
+        return {
+            title: (await parent).title,
+            description: (await parent).description,
+        };
+    }
+
+    const title = `${year} Holidays and Events in ${city ? `${city}, ` : ""}${
+        state ? `${state}, ` : ""
+    }${country}`;
+
+    const description = `Find all ${year} public holidays and events in ${
+        city ? city + ", " : ""
+    }${
+        state ? state + ", " : ""
+    }${country}. See which businesses and banks are closed, religious observances, and event restrictions.`;
+
+    return { title, description };
+}
 
 const Page = async ({
     searchParams,
