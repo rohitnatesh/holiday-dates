@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { UserDetails } from "@/types/UserDetails";
 import { createClient } from "@/utilities/supabase/server";
+import { NotificationMessagesType } from "@/components/notification";
 
 export const getUserDetails = async (): Promise<UserDetails | null> => {
     const supabase = await createClient();
@@ -33,39 +34,40 @@ export const getUserDetails = async (): Promise<UserDetails | null> => {
     };
 };
 
-export const login = async (
+export const authenticate = async (
+    mode: "login" | "create_account",
     email: string,
     password: string,
-    redirectPath = "/"
+    calendarParams?: string | null
 ) => {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+
+    const { error } = await supabase.auth[
+        mode === "login" ? "signInWithPassword" : "signUp"
+    ]({
         email,
         password,
     });
 
-    if (error) return { error: true, success: false };
+    if (error)
+        return {
+            error: true,
+            errorMessage:
+                error.code === "user_already_exists"
+                    ? "User already exists. Please try to login."
+                    : "Something went wrong! Please check your email and password and try again.",
+            success: false,
+        };
+
+    const notificationType: NotificationMessagesType =
+        mode === "login" ? "logged_in" : "account_created";
+
+    const redirectUrl = calendarParams
+        ? `/calendar?${decodeURIComponent(calendarParams)}&`
+        : "/?";
 
     revalidatePath("/", "layout");
-    redirect(`${redirectPath}?notification=logged_in`);
-};
-
-export const signup = async (formData: FormData) => {
-    const supabase = await createClient();
-
-    const data = {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-    };
-
-    const { error } = await supabase.auth.signUp(data);
-
-    if (error) {
-        redirect("/error");
-    }
-
-    revalidatePath("/", "layout");
-    redirect("/");
+    redirect(`${redirectUrl}notification=${notificationType}`);
 };
 
 export const logout = async () => {

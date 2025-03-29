@@ -1,10 +1,10 @@
-import { CreateAccountForm } from "./form";
+import { AuthenticationForm } from "@/components/authentication-form";
 import PageBaseWithNav from "@/components/page-base-with-nav";
 
 export default function CreateAccountPage() {
     return (
         <PageBaseWithNav>
-            <CreateAccountForm />
+            <AuthenticationForm mode="create_account" />
         </PageBaseWithNav>
     );
 }

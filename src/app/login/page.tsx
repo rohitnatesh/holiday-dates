@@ -1,10 +1,10 @@
-import { LoginForm } from "./form";
+import { AuthenticationForm } from "@/components/authentication-form";
 import PageBaseWithNav from "@/components/page-base-with-nav";
 
 export default function LoginPage() {
     return (
         <PageBaseWithNav>
-            <LoginForm />
+            <AuthenticationForm mode="login" />
         </PageBaseWithNav>
     );
 }

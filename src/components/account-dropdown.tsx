@@ -12,6 +12,7 @@ import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { ReactNode } from "react";
 import { logout } from "@/utilities/actions/auth";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const DropdownMenuLink = ({
     children,
@@ -27,10 +28,22 @@ const DropdownMenuLink = ({
     </DropdownMenuItem>
 );
 
+const LoginDropdownMenuItem = () => {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const isCalendarPage = pathname === "/calendar";
+    const searchParam = isCalendarPage
+        ? `?calendarParam=${encodeURIComponent(searchParams.toString())}`
+        : "";
+
+    return (
+        <DropdownMenuLink href={`/login${searchParam}`}>Login</DropdownMenuLink>
+    );
+};
+
 export const AccountDropdown = () => {
     const { isLoggedIn, refresh } = useLoggedIn();
-
-    const handleClick = () => {};
 
     return (
         <nav className="flex flex-row-reverse mb-1">
@@ -41,16 +54,15 @@ export const AccountDropdown = () => {
                         variant="ghost"
                         className="size-9 rounded-2xl"
                         title="Account"
-                        onClick={handleClick}
                     >
-                        <CircleUserIcon className="!size-8" />
+                        <CircleUserIcon className="!size-8 fill-green-100" />
                         <span className="sr-only">Account</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     {isLoggedIn ? (
                         <>
-                            <DropdownMenuLink href="/change-password">
+                            <DropdownMenuLink href="/profile">
                                 Profile
                             </DropdownMenuLink>
                             <DropdownMenuLink href="/subscription">
@@ -67,7 +79,7 @@ export const AccountDropdown = () => {
                             </DropdownMenuItem>
                         </>
                     ) : (
-                        <DropdownMenuLink href="/login">Login</DropdownMenuLink>
+                        <LoginDropdownMenuItem />
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>

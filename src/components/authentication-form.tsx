@@ -1,0 +1,151 @@
+"use client";
+
+import { FormEvent, useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { authenticate } from "@/utilities/actions/auth";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+const authenticationStrings = {
+    login: {
+        otherAuthenticationBaseUrl: "/create-account",
+        heading: "Login",
+        description: "Enter your email below to login to your account",
+        submitButtonText: "Login",
+        footerText: "Don't have an account? ",
+        footerLinkText: "Create Account",
+    },
+    create_account: {
+        otherAuthenticationBaseUrl: "/login",
+        heading: "Create Account",
+        description: "Enter your email and password to create your account",
+        submitButtonText: "Create Account",
+        footerText: "Already have an account? ",
+        footerLinkText: "Login",
+    },
+};
+
+export const AuthenticationForm = ({
+    mode,
+}: {
+    mode: "login" | "create_account";
+}) => {
+    const [isPending, startTransition] = useTransition();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const strings = authenticationStrings[mode];
+
+    const searchParam = useSearchParams();
+    const calendarParam = searchParam.get("calendarParam");
+    const otherAuthenticationUrl = `${strings.otherAuthenticationBaseUrl}${
+        calendarParam ? `?calendarParam=${calendarParam}}` : ""
+    }`;
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        setErrorMessage(null);
+
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email")?.toString();
+        const password = formData.get("password")?.toString();
+
+        if (!email?.length || !password?.length) {
+            setErrorMessage("Email and password are required.");
+            return;
+        }
+
+        startTransition(async () => {
+            const { error, errorMessage } = await authenticate(
+                mode,
+                email,
+                password,
+                calendarParam
+            );
+
+            if (error) {
+                setErrorMessage(error ? errorMessage : "Something went wrong!");
+            }
+        });
+    };
+
+    return (
+        <div className="flex sm:ml-4 mt-4">
+            <Card className="max-w-96 w-full">
+                <CardHeader>
+                    <CardTitle className="text-2xl">
+                        {strings.heading}
+                    </CardTitle>
+                    <CardDescription>{strings.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {errorMessage !== null && (
+                        <p className="font-medium leading-snug mb-4 text-red-600">
+                            {errorMessage}
+                        </p>
+                    )}
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex flex-col gap-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="me@example.com"
+                                    required
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <div className="flex items-center">
+                                    <Label htmlFor="password">Password</Label>
+                                    {mode === "login" && (
+                                        <a
+                                            href="#"
+                                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                        >
+                                            Forgot your password?
+                                        </a>
+                                    )}
+                                </div>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    required
+                                    {...(mode === "create_account" && {
+                                        autoComplete: "new-password",
+                                    })}
+                                />
+                            </div>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isPending}
+                            >
+                                {strings.submitButtonText}
+                            </Button>
+                        </div>
+                        <div className="mt-6 text-center text-sm">
+                            {strings.footerText}
+                            <Link
+                                href={otherAuthenticationUrl}
+                                className="underline underline-offset-4"
+                            >
+                                {strings.footerLinkText}
+                            </Link>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
+        </div>
+    );
+};

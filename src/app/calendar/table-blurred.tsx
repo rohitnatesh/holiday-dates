@@ -4,8 +4,6 @@ import { UserDetails } from "@/types/UserDetails";
 import placeholderHolidaysAndEvents from "@/mocks/placeholderHolidaysAndEvents.json";
 import { Holiday } from "@/types/Holiday";
 import { TableRowWithDetails } from "./table-row-with-details";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { LockKeyhole } from "lucide-react";
 import {
     Card,
@@ -14,6 +12,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { TableLoginLink } from "./table-login-link";
 
 const placeholderTableBody = placeholderHolidaysAndEvents.map((row) => (
     <TableRowWithDetails
@@ -59,15 +58,7 @@ export const TableBlurred = ({ user }: { user: UserDetails | null }) => {
                         </p>
                     </CardContent>
                     <CardFooter className="flex flex-col items-stretch sm:items-end">
-                        {isLoggedIn ? (
-                            <Button asChild>
-                                <Link href="/login">Subscribe</Link>
-                            </Button>
-                        ) : (
-                            <Button asChild>
-                                <Link href="/login">Login</Link>
-                            </Button>
-                        )}
+                        <TableLoginLink />
                     </CardFooter>
                 </Card>
             </div>
