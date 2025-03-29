@@ -57,9 +57,15 @@ export const AuthenticationForm = ({
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email")?.toString();
         const password = formData.get("password")?.toString();
+        const confirmPassword = formData.get("confirm-password")?.toString();
 
         if (!email?.length || !password?.length) {
             setErrorMessage("Email and password are required.");
+            return;
+        }
+
+        if (mode === "create_account" && password !== confirmPassword) {
+            setErrorMessage("Passwords are not matching! Please try again.");
             return;
         }
 
@@ -126,6 +132,20 @@ export const AuthenticationForm = ({
                                     })}
                                 />
                             </div>
+                            {mode === "create_account" && (
+                                <div className="grid gap-2">
+                                    <Label htmlFor="confirm-password">
+                                        Confirm Password
+                                    </Label>
+                                    <Input
+                                        id="confirm-password"
+                                        type="password"
+                                        name="confirm-password"
+                                        autoComplete="new-password"
+                                        required
+                                    />
+                                </div>
+                            )}
                             <Button
                                 type="submit"
                                 className="w-full"
