@@ -46,7 +46,9 @@ export const AuthenticationForm = ({
     const searchParam = useSearchParams();
     const calendarParam = searchParam.get("calendarParam");
     const otherAuthenticationUrl = `${strings.otherAuthenticationBaseUrl}${
-        calendarParam ? `?calendarParam=${calendarParam}}` : ""
+        calendarParam
+            ? `?calendarParam=${encodeURIComponent(calendarParam)}`
+            : ""
     }`;
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

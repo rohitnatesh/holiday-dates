@@ -36,7 +36,7 @@ export const TableBlurred = ({ user }: { user: UserDetails | null }) => {
                 </TableBody>
             </Table>
 
-            <div className="absolute top-12 backdrop-blur-sm left-0 h-full w-full">
+            <div className="absolute top-12 backdrop-blur-sm left-0 h-[calc(100%-3rem)] w-full">
                 <Card className="absolute top-1/3 w-full left-1/2 translate-x-[-50%] translate-y-[-50%] z-50 max-w-lg">
                     <CardHeader>
                         <CardTitle className="flex gap-2 justify-center sm:justify-start">
