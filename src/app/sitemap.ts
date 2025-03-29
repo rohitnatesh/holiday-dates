@@ -14,13 +14,13 @@ const generateYearsList = (): number[] => {
     const currentYear = new Date().getFullYear();
     const years: number[] = [];
 
-    // Last 10 years (including current year)
-    for (let year = currentYear - 9; year <= currentYear; year++) {
+    // Last 50 years (including current year)
+    for (let year = currentYear - 49; year <= currentYear; year++) {
         years.push(year);
     }
 
-    // Next 10 years
-    for (let year = currentYear + 1; year <= currentYear + 10; year++) {
+    // Next 50 years
+    for (let year = currentYear + 1; year <= currentYear + 50; year++) {
         years.push(year);
     }
 
