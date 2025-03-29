@@ -4,6 +4,7 @@ import { UserDetails } from "@/types/UserDetails";
 import { getUserDetails } from "@/utilities/actions/auth";
 import { TableWithData } from "./table-with-data";
 import { TableBlurred } from "./table-blurred";
+import { AdjacentYearLinks } from "./adjacent-year-links";
 
 const Page = async ({
     searchParams,
@@ -11,6 +12,9 @@ const Page = async ({
     searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
     const { country, state, city, year } = await searchParams;
+    const heading = `Holidays and Events in ${city ? `${city}, ` : ""}${
+        state ? `${state}, ` : ""
+    }${country}`;
 
     if (!country || !year) {
         throw new Error();
@@ -30,9 +34,7 @@ const Page = async ({
                 id="holidays-heading"
                 className="text-lg sm:text-2xl font-semibold tracking-tight mt-4 mb-8 text-center"
             >
-                {year} Holidays and Events in {city ? `${city}, ` : null}
-                {state ? `${state}, ` : null}
-                {country}
+                {year} {heading}
             </h2>
 
             {isDataFree || user ? (
@@ -45,6 +47,14 @@ const Page = async ({
             ) : (
                 <TableBlurred user={user} />
             )}
+
+            <AdjacentYearLinks
+                country={country}
+                state={state}
+                city={city}
+                year={year}
+                heading={heading}
+            />
         </section>
     );
 };
