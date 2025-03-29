@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { AccountDropdown } from "@/components/account-dropdown";
@@ -31,7 +32,9 @@ export default function RootLayout({
                     {children}
                 </main>
                 <Footer />
-                <Notification />
+                <Suspense>
+                    <Notification />
+                </Suspense>
             </body>
         </html>
     );

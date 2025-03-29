@@ -13,6 +13,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { TableLoginLink } from "./table-login-link";
+import { Suspense } from "react";
 
 const placeholderTableBody = placeholderHolidaysAndEvents.map((row) => (
     <TableRowWithDetails
@@ -58,7 +59,9 @@ export const TableBlurred = ({ user }: { user: UserDetails | null }) => {
                         </p>
                     </CardContent>
                     <CardFooter className="flex flex-col items-stretch sm:items-end">
-                        <TableLoginLink />
+                        <Suspense>
+                            <TableLoginLink />
+                        </Suspense>
                     </CardFooter>
                 </Card>
             </div>
