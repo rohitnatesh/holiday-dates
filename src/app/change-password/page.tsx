@@ -1,11 +1,16 @@
+import { AuthenticationForm } from "@/components/authentication-form";
 import PageBaseWithNav from "@/components/page-base-with-nav";
+import { getUserDetails } from "@/utilities/actions/auth";
 
-export default function ProfilePage() {
+export default async function ChangePasswordPage() {
+    const user = await getUserDetails();
+
     return (
         <PageBaseWithNav>
-            <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-12">
-                Coming soon...
-            </h2>
+            <AuthenticationForm
+                userEmail={user?.email}
+                mode="change_password"
+            />
         </PageBaseWithNav>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState, useTransition } from "react";
+import React, { FormEvent, Suspense, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authenticate, forgotPassword } from "@/utilities/actions/auth";
+import {
+    authenticate,
+    changePassword,
+    forgotPassword,
+} from "@/utilities/actions/auth";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -40,24 +44,51 @@ const authenticationStrings = {
         footerText: "Remembered your password? ",
         footerLinkText: "Login",
     },
+    change_password: {
+        heading: "Change Password",
+        description: "Enter your new password below",
+        submitButtonText: "Update Password",
+        footerText: null,
+        footerLinkText: null,
+        otherAuthenticationBaseUrl: null,
+    },
 };
 
-export const AuthenticationForm = ({
-    mode,
+const FooterLink = ({
+    baseUrl,
+    children,
 }: {
-    mode: "login" | "create_account" | "forgot_password";
+    baseUrl: string;
+    children: React.ReactNode;
 }) => {
-    const [isPending, startTransition] = useTransition();
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const strings = authenticationStrings[mode];
-
     const searchParam = useSearchParams();
     const calendarParam = searchParam.get("calendarParam");
-    const otherAuthenticationUrl = `${strings.otherAuthenticationBaseUrl}${
+    const otherAuthenticationUrl = `${baseUrl}${
         calendarParam
             ? `?calendarParam=${encodeURIComponent(calendarParam)}`
             : ""
     }`;
+
+    return (
+        <Link
+            href={otherAuthenticationUrl}
+            className="underline underline-offset-4"
+        >
+            {children}
+        </Link>
+    );
+};
+
+export const AuthenticationForm = ({
+    mode,
+    userEmail,
+}: {
+    mode: "login" | "create_account" | "forgot_password" | "change_password";
+    userEmail?: string;
+}) => {
+    const [isPending, startTransition] = useTransition();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const strings = authenticationStrings[mode];
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -74,24 +105,41 @@ export const AuthenticationForm = ({
             return;
         }
 
+        if (mode === "change_password" && !password?.length) {
+            setErrorMessage("Password is required.");
+            return;
+        }
+
         if (
-            mode !== "forgot_password" &&
+            (mode === "login" || mode === "create_account") &&
             (!email?.length || !password?.length)
         ) {
             setErrorMessage("Email and password are required.");
             return;
         }
 
-        if (mode === "create_account" && password !== confirmPassword) {
+        if (
+            (mode === "create_account" || mode === "change_password") &&
+            password !== confirmPassword
+        ) {
             setErrorMessage("Passwords are not matching! Please try again.");
             return;
         }
 
         startTransition(async () => {
-            const response =
-                mode === "forgot_password"
-                    ? forgotPassword(email!)
-                    : authenticate(mode, email!, password!, calendarParam);
+            let response;
+
+            if (mode === "forgot_password") {
+                response = forgotPassword(email!);
+            } else if (mode === "change_password") {
+                response = changePassword(password!);
+            } else {
+                const searchParam = new URLSearchParams(
+                    document.location.search
+                );
+                const calendarParam = searchParam.get("calendarParam");
+                response = authenticate(mode, email!, password!, calendarParam);
+            }
 
             const { error, errorMessage } = await response;
 
@@ -126,6 +174,11 @@ export const AuthenticationForm = ({
                                     name="email"
                                     placeholder="me@example.com"
                                     required
+                                    {...(mode === "change_password" && {
+                                        value: userEmail,
+                                        disabled: true,
+                                        readOnly: true,
+                                    })}
                                 />
                             </div>
                             {mode !== "forgot_password" && (
@@ -148,13 +201,17 @@ export const AuthenticationForm = ({
                                         type="password"
                                         name="password"
                                         required
-                                        {...(mode === "create_account" && {
-                                            autoComplete: "new-password",
-                                        })}
+                                        autoComplete={
+                                            mode === "create_account" ||
+                                            mode === "change_password"
+                                                ? "new-password"
+                                                : "current-password"
+                                        }
                                     />
                                 </div>
                             )}
-                            {mode === "create_account" && (
+                            {(mode === "create_account" ||
+                                mode === "change_password") && (
                                 <div className="grid gap-2">
                                     <Label htmlFor="confirm-password">
                                         Confirm Password
@@ -176,15 +233,23 @@ export const AuthenticationForm = ({
                                 {strings.submitButtonText}
                             </Button>
                         </div>
-                        <div className="mt-6 text-center text-sm">
-                            {strings.footerText}
-                            <Link
-                                href={otherAuthenticationUrl}
-                                className="underline underline-offset-4"
-                            >
-                                {strings.footerLinkText}
-                            </Link>
-                        </div>
+                        {(strings.footerText ||
+                            strings.otherAuthenticationBaseUrl) && (
+                            <div className="mt-6 text-center text-sm">
+                                {strings.footerText ?? ""}
+                                {strings.otherAuthenticationBaseUrl && (
+                                    <Suspense>
+                                        <FooterLink
+                                            baseUrl={
+                                                strings.otherAuthenticationBaseUrl
+                                            }
+                                        >
+                                            {strings.footerLinkText}
+                                        </FooterLink>
+                                    </Suspense>
+                                )}
+                            </div>
+                        )}
                     </form>
                 </CardContent>
             </Card>

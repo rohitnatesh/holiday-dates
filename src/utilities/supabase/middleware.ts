@@ -39,17 +39,19 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
+    if (!user && request.nextUrl.pathname.startsWith("/change-password")) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        return NextResponse.redirect(url);
+    }
+
     if (
         user &&
         (request.nextUrl.pathname.startsWith("/login") ||
             request.nextUrl.pathname.startsWith("/create-account"))
     ) {
         const url = request.nextUrl.clone();
-        const redirectPath = decodeURIComponent(
-            url.searchParams.get("redirect") || "/"
-        );
-        // TODO: Validate redirectPath
-        url.pathname = redirectPath;
+        url.pathname = "/";
         return NextResponse.redirect(url);
     }
 

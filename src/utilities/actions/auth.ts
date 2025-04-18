@@ -34,6 +34,28 @@ export const getUserDetails = async (): Promise<UserDetails | null> => {
     };
 };
 
+export const authenticateWithToken = async (tokenHash: string) => {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: "email",
+    });
+
+    if (error)
+        return {
+            error: true,
+            errorMessage: "Something went wrong!",
+            success: false,
+        };
+
+    return {
+        error: false,
+        errorMessage: null,
+        success: true,
+    };
+};
+
 export const authenticate = async (
     mode: "login" | "create_account",
     email: string,
@@ -86,6 +108,22 @@ export const forgotPassword = async (email: string) => {
 
     const notificationType: NotificationMessagesType =
         "password_reset_link_sent";
+    redirect(`/login?notification=${notificationType}`);
+};
+
+export const changePassword = async (password: string) => {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.updateUser({ password });
+
+    if (error)
+        return {
+            error: true,
+            errorMessage: "Something went wrong! Please try again.",
+            success: false,
+        };
+
+    const notificationType: NotificationMessagesType = "password_changed";
     redirect(`/?notification=${notificationType}`);
 };
 

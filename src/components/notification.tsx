@@ -10,6 +10,9 @@ const NOTIFICATION_MESSAGES = {
     account_created: "Account created! Welcome, you're now signed in.",
     password_reset_link_sent:
         "Password reset link sent! Check your email to continue.",
+    password_changed: "Your password has been changed successfully.",
+    token_invalid:
+        "Your password reset link is invalid or expired. Please request a new one.",
 };
 
 export type NotificationMessagesType = keyof typeof NOTIFICATION_MESSAGES;
@@ -30,7 +33,10 @@ export const Notification = () => {
 
         if (!(notification in NOTIFICATION_MESSAGES)) return;
 
-        toast.success(
+        const notificationType =
+            notification === "token_invalid" ? "error" : "success";
+
+        toast[notificationType](
             NOTIFICATION_MESSAGES[notification as NotificationMessagesType]
         );
     }, [pathname, router, searchParams]);
