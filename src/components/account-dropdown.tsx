@@ -62,8 +62,8 @@ export const AccountDropdown = () => {
                 <DropdownMenuContent align="end">
                     {isLoggedIn ? (
                         <>
-                            <DropdownMenuLink href="/profile">
-                                Profile
+                            <DropdownMenuLink href="/change-password">
+                                Change Password
                             </DropdownMenuLink>
                             <DropdownMenuLink href="/subscription">
                                 Subscription

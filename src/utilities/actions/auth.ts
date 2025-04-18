@@ -70,6 +70,25 @@ export const authenticate = async (
     redirect(`${redirectUrl}notification=${notificationType}`);
 };
 
+export const forgotPassword = async (email: string) => {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${process.env.WEBSITE_URL}/change-password`,
+    });
+
+    if (error)
+        return {
+            error: true,
+            errorMessage: "Something went wrong! Please try again.",
+            success: false,
+        };
+
+    const notificationType: NotificationMessagesType =
+        "password_reset_link_sent";
+    redirect(`/?notification=${notificationType}`);
+};
+
 export const logout = async () => {
     const supabase = await createClient();
     await supabase.auth.signOut();

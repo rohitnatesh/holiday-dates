@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authenticate } from "@/utilities/actions/auth";
+import { authenticate, forgotPassword } from "@/utilities/actions/auth";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -32,12 +32,20 @@ const authenticationStrings = {
         footerText: "Already have an account? ",
         footerLinkText: "Login",
     },
+    forgot_password: {
+        otherAuthenticationBaseUrl: "/login",
+        heading: "Forgot Password",
+        description: "A password reset link will be emailed to you",
+        submitButtonText: "Send Reset Link",
+        footerText: "Remembered your password? ",
+        footerLinkText: "Login",
+    },
 };
 
 export const AuthenticationForm = ({
     mode,
 }: {
-    mode: "login" | "create_account";
+    mode: "login" | "create_account" | "forgot_password";
 }) => {
     const [isPending, startTransition] = useTransition();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -61,7 +69,15 @@ export const AuthenticationForm = ({
         const password = formData.get("password")?.toString();
         const confirmPassword = formData.get("confirm-password")?.toString();
 
-        if (!email?.length || !password?.length) {
+        if (mode === "forgot_password" && !email?.length) {
+            setErrorMessage("Email is required.");
+            return;
+        }
+
+        if (
+            mode !== "forgot_password" &&
+            (!email?.length || !password?.length)
+        ) {
             setErrorMessage("Email and password are required.");
             return;
         }
@@ -72,12 +88,12 @@ export const AuthenticationForm = ({
         }
 
         startTransition(async () => {
-            const { error, errorMessage } = await authenticate(
-                mode,
-                email,
-                password,
-                calendarParam
-            );
+            const response =
+                mode === "forgot_password"
+                    ? forgotPassword(email!)
+                    : authenticate(mode, email!, password!, calendarParam);
+
+            const { error, errorMessage } = await response;
 
             if (error) {
                 setErrorMessage(error ? errorMessage : "Something went wrong!");
@@ -112,28 +128,32 @@ export const AuthenticationForm = ({
                                     required
                                 />
                             </div>
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {mode === "login" && (
-                                        <a
-                                            href="#"
-                                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                        >
-                                            Forgot your password?
-                                        </a>
-                                    )}
+                            {mode !== "forgot_password" && (
+                                <div className="grid gap-2">
+                                    <div className="flex items-center">
+                                        <Label htmlFor="password">
+                                            Password
+                                        </Label>
+                                        {mode === "login" && (
+                                            <a
+                                                href="/forgot-password"
+                                                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                            >
+                                                Forgot your password?
+                                            </a>
+                                        )}
+                                    </div>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        required
+                                        {...(mode === "create_account" && {
+                                            autoComplete: "new-password",
+                                        })}
+                                    />
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    {...(mode === "create_account" && {
-                                        autoComplete: "new-password",
-                                    })}
-                                />
-                            </div>
+                            )}
                             {mode === "create_account" && (
                                 <div className="grid gap-2">
                                     <Label htmlFor="confirm-password">

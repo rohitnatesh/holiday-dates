@@ -8,6 +8,8 @@ const NOTIFICATION_MESSAGES = {
     logged_in: "You are logged in. Welcome back!",
     logged_out: "Successfully logged out. See you next time!",
     account_created: "Account created! Welcome, you're now signed in.",
+    password_reset_link_sent:
+        "Password reset link sent! Check your email to continue.",
 };
 
 export type NotificationMessagesType = keyof typeof NOTIFICATION_MESSAGES;
