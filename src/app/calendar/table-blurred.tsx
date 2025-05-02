@@ -12,7 +12,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { TableLoginLink } from "./table-login-link";
+import { TableAccessLink } from "./table-access-link";
 import { Suspense } from "react";
 
 const placeholderTableBody = placeholderHolidaysAndEvents.map((row) => (
@@ -25,7 +25,6 @@ const placeholderTableBody = placeholderHolidaysAndEvents.map((row) => (
 
 export const TableBlurred = ({ user }: { user: UserDetails | null }) => {
     const isLoggedIn = Boolean(user);
-    // const isSubscriber = Boolean(user?.isSubscriber);
 
     return (
         <div className="relative">
@@ -54,13 +53,13 @@ export const TableBlurred = ({ user }: { user: UserDetails | null }) => {
                             Explore holidays and events for current year and
                             earlier for free.
                             {isLoggedIn
-                                ? " Subscribe to unlock future years!"
-                                : " Log in to see future years!"}
+                                ? " Subscribe to unlock future holidays and events."
+                                : " Sign in to see what's next."}
                         </p>
                     </CardContent>
                     <CardFooter className="flex flex-col items-stretch sm:items-end">
                         <Suspense>
-                            <TableLoginLink />
+                            <TableAccessLink isLoggedIn={isLoggedIn} />
                         </Suspense>
                     </CardFooter>
                 </Card>

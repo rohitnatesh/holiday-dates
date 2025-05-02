@@ -2,9 +2,10 @@
 CREATE TABLE public.user_details (
     id uuid NOT NULL,
     "isSubscriber" boolean DEFAULT false,
-    name character varying,
+    "subscriptionDate" timestamp without time zone DEFAULT NULL,
     created_at timestamp without time zone DEFAULT NOW(),
-    updated_at timestamp without time zone DEFAULT NOW()
+    updated_at timestamp without time zone DEFAULT NOW(),
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE ONLY public.user_details

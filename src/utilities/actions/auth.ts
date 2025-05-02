@@ -5,19 +5,20 @@ import { redirect } from "next/navigation";
 import { UserDetails } from "@/types/UserDetails";
 import { createClient } from "@/utilities/supabase/server";
 import { NotificationMessagesType } from "@/components/notification";
+import { isAuthSessionMissingError } from "@supabase/supabase-js";
 
 export const getUserDetails = async (): Promise<UserDetails | null> => {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();
 
     if (error) {
-        console.error(error);
+        if (!isAuthSessionMissingError(error)) console.error(error);
         return null;
     }
 
     const { data: userData, error: userError } = await supabase
         .from("user_details")
-        .select("name, isSubscriber")
+        .select("isSubscriber, subscriptionDate")
         .eq("id", data.user.id)
         .single();
 
@@ -29,8 +30,8 @@ export const getUserDetails = async (): Promise<UserDetails | null> => {
     return {
         id: data.user.id,
         email: data.user.email || "",
-        name: userData.name || "",
         isSubscriber: Boolean(userData.isSubscriber),
+        subscriptionDate: userData.subscriptionDate,
     };
 };
 

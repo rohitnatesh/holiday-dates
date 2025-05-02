@@ -39,7 +39,13 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && request.nextUrl.pathname.startsWith("/change-password")) {
+    const pathName = request.nextUrl.pathname;
+
+    if (
+        !user &&
+        (pathName.startsWith("/change-password") ||
+            pathName.startsWith("/subscription"))
+    ) {
         const url = request.nextUrl.clone();
         url.pathname = "/login";
         return NextResponse.redirect(url);
@@ -47,8 +53,8 @@ export async function updateSession(request: NextRequest) {
 
     if (
         user &&
-        (request.nextUrl.pathname.startsWith("/login") ||
-            request.nextUrl.pathname.startsWith("/create-account"))
+        (pathName.startsWith("/login") ||
+            pathName.startsWith("/create-account"))
     ) {
         const url = request.nextUrl.clone();
         url.pathname = "/";

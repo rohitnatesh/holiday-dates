@@ -59,6 +59,8 @@ const Page = async ({
         user = await getUserDetails();
     }
 
+    const isSubscriber = Boolean(user?.isSubscriber);
+
     return (
         <section className="sm:ml-4 sm:max-w-[800px]">
             <h2
@@ -68,7 +70,7 @@ const Page = async ({
                 {year} {heading}
             </h2>
 
-            {isDataFree || user ? (
+            {isDataFree || isSubscriber ? (
                 <TableWithData
                     country={country}
                     state={state}
