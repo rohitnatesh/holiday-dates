@@ -7,12 +7,13 @@ import holidaysList from "@/mocks/holidaysAndEvents.json";
 import type { ListResponse } from "@/types/ListResponse";
 import type { Holiday } from "@/types/Holiday";
 import type { HolidaysResponse } from "@/types/HolidaysResponse";
+import { fetchWithTimeout } from "@/utilities/fetchWithTimeout";
 
 export const fetchCountriesList = async () => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.USE_MOCK_DATA === "false") {
         try {
             const countriesApi = getApiUrl("COUNTRY_LIST");
-            const countriesResponse = await fetch(countriesApi, {});
+            const countriesResponse = await fetchWithTimeout(countriesApi, {});
             const countriesList: ListResponse = await countriesResponse.json();
 
             return { countries: countriesList.theList };
@@ -31,7 +32,7 @@ export const fetchCountriesList = async () => {
 };
 
 export const fetchStatesAndCitiesList = async (country: string) => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.USE_MOCK_DATA === "false") {
         try {
             const countryStateApi = getApiUrl("COUNTRY_STATE_LIST", {
                 country,
@@ -39,8 +40,8 @@ export const fetchStatesAndCitiesList = async (country: string) => {
             const countryCityApi = getApiUrl("COUNTRY_CITY_LIST", { country });
 
             const [statesResponse, citiesResponse] = await Promise.all([
-                fetch(countryStateApi),
-                fetch(countryCityApi),
+                fetchWithTimeout(countryStateApi),
+                fetchWithTimeout(countryCityApi),
             ]);
 
             const statesList: ListResponse = await statesResponse.json();
@@ -76,13 +77,13 @@ export const fetchStatesAndCitiesList = async (country: string) => {
 };
 
 export const fetchCitiesList = async (country: string, state: string) => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.USE_MOCK_DATA === "false") {
         try {
             const countryStateCityApi = getApiUrl("COUNTRY_STATE_CITY_LIST", {
                 country,
                 state,
             });
-            const citiesResponse = await fetch(countryStateCityApi);
+            const citiesResponse = await fetchWithTimeout(countryStateCityApi);
             const citiesList: ListResponse = await citiesResponse.json();
 
             return { cities: citiesList.theList };
@@ -106,7 +107,7 @@ export const fetchHolidayList = async (
     state?: string,
     city?: string
 ) => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.USE_MOCK_DATA === "false") {
         try {
             const holidayListApi = getApiUrl("HOLIDAY_LIST", {
                 country,
@@ -120,7 +121,7 @@ export const fetchHolidayList = async (
                 endDay: "31",
             });
 
-            const holidaysResponse = await fetch(holidayListApi);
+            const holidaysResponse = await fetchWithTimeout(holidayListApi);
             const holidaysList: HolidaysResponse =
                 await holidaysResponse.json();
 
