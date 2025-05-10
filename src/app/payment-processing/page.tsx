@@ -1,7 +1,7 @@
 "use server";
 
+import { verifyCheckout } from "@/utilities/actions/checkout";
 import { updateSubscriptionStatus } from "@/utilities/actions/subscription";
-import { stripe } from "@/utilities/stripe";
 import { redirect } from "next/navigation";
 
 const PaymentProcessingPage = async ({
@@ -19,11 +19,9 @@ const PaymentProcessingPage = async ({
     if (!checkoutSessionId)
         return redirect("/subscription?notification=subscription_pending");
 
-    const checkoutSession = await stripe.checkout.sessions.retrieve(
-        checkoutSessionId
-    );
+    const checkoutSuccess = await verifyCheckout(checkoutSessionId);
 
-    if (checkoutSession.payment_status === "paid") {
+    if (checkoutSuccess) {
         await updateSubscriptionStatus();
         return;
     }

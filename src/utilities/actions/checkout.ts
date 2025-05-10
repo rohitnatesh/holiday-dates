@@ -6,7 +6,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 import { getUserDetails } from "./auth";
 
-export const initPayment = async () => {
+export const initCheckout = async () => {
     const userDetails = await getUserDetails();
 
     if (!userDetails) return { error: true };
@@ -41,4 +41,12 @@ export const initPayment = async () => {
         console.error(err);
         return { error: true };
     }
+};
+
+export const verifyCheckout = async (checkoutSessionId: string) => {
+    const checkoutSession = await stripe.checkout.sessions.retrieve(
+        checkoutSessionId
+    );
+
+    return checkoutSession.payment_status === "paid";
 };

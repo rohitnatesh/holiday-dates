@@ -2,7 +2,7 @@
 
 import { sendNotification } from "@/components/notification";
 import { Button } from "@/components/ui/button";
-import { initPayment } from "@/utilities/actions/payment";
+import { initCheckout } from "@/utilities/actions/checkout";
 import { useState } from "react";
 
 export const SubscribeButton = () => {
@@ -10,7 +10,7 @@ export const SubscribeButton = () => {
 
     const handleSubmit = async () => {
         setLoading(true);
-        const { error } = await initPayment();
+        const { error } = await initCheckout();
         setLoading(false);
 
         if (error) {
