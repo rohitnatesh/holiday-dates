@@ -13,9 +13,26 @@ const NOTIFICATION_MESSAGES = {
     password_changed: "Your password has been changed successfully.",
     token_invalid:
         "Your password reset link is invalid or expired. Please request a new one.",
+    subscription_failed:
+        "Subscription could not be completed. Please try again or contact us if the issue persists.",
+    subscription_success: "You're subscribed! Thank you and welcome aboard.",
+    subscription_pending:
+        "We are processing your payment and it will be quick. Please check back shortly.",
 };
 
+const errorKeys = ["subscription_failed", "token_invalid"];
+
 export type NotificationMessagesType = keyof typeof NOTIFICATION_MESSAGES;
+
+export const sendNotification = (notification: NotificationMessagesType) => {
+    const notificationType = errorKeys.includes(notification)
+        ? "error"
+        : "success";
+
+    toast[notificationType](
+        NOTIFICATION_MESSAGES[notification as NotificationMessagesType]
+    );
+};
 
 export const Notification = () => {
     const pathname = usePathname();
@@ -33,12 +50,7 @@ export const Notification = () => {
 
         if (!(notification in NOTIFICATION_MESSAGES)) return;
 
-        const notificationType =
-            notification === "token_invalid" ? "error" : "success";
-
-        toast[notificationType](
-            NOTIFICATION_MESSAGES[notification as NotificationMessagesType]
-        );
+        sendNotification(notification as NotificationMessagesType);
     }, [pathname, router, searchParams]);
 
     return (

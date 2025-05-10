@@ -42,6 +42,16 @@ export async function updateSession(request: NextRequest) {
     const pathName = request.nextUrl.pathname;
 
     if (
+        pathName.startsWith("/payment-processing") &&
+        (!user || !request.nextUrl.searchParams.has("checkout_session_id"))
+    ) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/";
+        url.searchParams.delete("checkout_session_id");
+        return NextResponse.redirect(url);
+    }
+
+    if (
         !user &&
         (pathName.startsWith("/change-password") ||
             pathName.startsWith("/subscription"))

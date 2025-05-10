@@ -1,10 +1,10 @@
+import { Metadata } from "next";
+import { Suspense } from "react";
 import PageBaseWithNav from "@/components/page-base-with-nav";
-import { Button } from "@/components/ui/button";
 import { getUserDetails } from "@/utilities/actions/auth";
 import { formatDate } from "@/utilities/formatDate";
 import { CalendarCheck2, CalendarPlus } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
+import { SubscribeButton } from "./subscribe-button";
 
 export const metadata: Metadata = {
     title: "Subscription - World Holidays and Events",
@@ -56,9 +56,9 @@ export default async function SubscriptionPage() {
                         : "Ready to join us?"}
                 </p>
                 {!isSubscriber && (
-                    <Button asChild className="mt-4">
-                        <Link href="">Subscribe</Link>
-                    </Button>
+                    <Suspense fallback={null}>
+                        <SubscribeButton />
+                    </Suspense>
                 )}
             </div>
         </PageBaseWithNav>
