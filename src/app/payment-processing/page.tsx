@@ -1,7 +1,7 @@
 "use server";
 
 import { verifyCheckout } from "@/utilities/actions/checkout";
-import { updateSubscriptionStatus } from "@/utilities/actions/subscription";
+import { updateSubscription } from "@/utilities/actions/subscription";
 import { redirect } from "next/navigation";
 
 const PaymentProcessingPage = async ({
@@ -22,7 +22,7 @@ const PaymentProcessingPage = async ({
     const checkoutSuccess = await verifyCheckout(checkoutSessionId);
 
     if (checkoutSuccess) {
-        await updateSubscriptionStatus();
+        await updateSubscription();
         return;
     }
 

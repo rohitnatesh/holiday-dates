@@ -4,7 +4,7 @@ import { getUserDetails } from "@/utilities/actions/auth";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utilities/supabase/server";
 
-export const updateSubscriptionStatus = async () => {
+export const updateSubscription = async () => {
     const userDetails = await getUserDetails();
 
     if (!userDetails)
@@ -29,4 +29,17 @@ export const updateSubscriptionStatus = async () => {
     }
 
     return redirect("/subscription?notification=subscription_success");
+};
+
+export const updateSubscriptionFromWebhook = async (userId: string) => {
+    const supabase = await createClient();
+    const { error } = await supabase
+        .from("user_details")
+        .update({
+            isSubscriber: true,
+            subscriptionDate: new Date().toUTCString(),
+        })
+        .eq("id", userId);
+
+    return { error: error && error.message };
 };
